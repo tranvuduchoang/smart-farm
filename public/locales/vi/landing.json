@@ -1,0 +1,47 @@
+{
+    "hero": {
+        "title": "Thực phẩm từ nông trại đến bàn ăn",
+        "subtitle": "Kết nối với nông dân địa phương và thưởng thức sản phẩm tươi sống, hữu cơ. Sản phẩm 100% có thể truy xuất nguồn gốc từ trang trại đến bàn ăn",
+        "searchPlaceholder": "Tìm kiếm sản phẩm, thịt, sữa...",
+        "buttonSearch": "Tìm kiếm"
+    },
+    "sectionTitle": "Mua sắm theo danh mục",
+    "productListTitle": "Danh sách sản phẩm",
+    "categories": [
+        {
+            "slug":"fruits",
+            "name": "Trái cây",
+            "image": "/categories/fruits.jpg"
+        },
+        {
+            "slug":"vegetables",
+            "name": "Rau củ",
+            "image": "/categories/vegetables.jpg"
+        },
+        {
+            "slug":"meats",
+            "name": "Thịt",
+            "image": "/categories/meats.jpg"
+        },
+        {
+            "slug":"breads",
+            "name": "Bánh mì",
+            "image": "/categories/breads.jpg"
+        },
+        {
+            "slug":"dairy",
+            "name": "Sữa",
+            "image": "/categories/dairy.jpg"
+        },
+        {
+            "slug":"seafood",
+            "name": "Hải sản",
+            "image": "/categories/seafood.jpg"
+        },
+        {
+            "slug":"wines",
+            "name": "Rượu",
+            "image": "/categories/wines.jpg"
+        }
+    ]
+}

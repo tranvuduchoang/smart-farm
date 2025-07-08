@@ -1,0 +1,47 @@
+{
+    "hero": {
+        "title": "Farm to Table Groceries",
+        "subtitle": "Connect with local farmers and enjoy fresh, organic produce and groceries. 100% traceable products from farm to table",
+        "searchPlaceholder": "Search for produce, meat, dairy...",
+        "buttonSearch": "Search"
+    },
+    "sectionTitle": "Shop by category",
+    "productListTitle": "Product List",
+    "categories": [
+        {
+            "slug":"fruits",
+            "name": "Fruits",
+            "image": "/categories/fruits.jpg"
+        },
+        {
+            "slug":"vegetables",
+            "name": "Vegetables",
+            "image": "/categories/vegetables.jpg"
+        },
+        {
+            "slug":"meats",
+            "name": "Meats",
+            "image": "/categories/meats.jpg"
+        },
+        {
+            "slug":"breads",
+            "name": "Breads",
+            "image": "/categories/breads.jpg"
+        },
+        {
+            "slug":"dairy",
+            "name": "Dairy",
+            "image": "/categories/dairy.jpg"
+        },
+        {
+            "slug":"seafood",
+            "name": "Seafood",
+            "image": "/categories/seafood.jpg"
+        },
+        {
+            "slug":"wines",
+            "name": "Wines",
+            "image": "/categories/wines.jpg"
+        }
+    ]
+}

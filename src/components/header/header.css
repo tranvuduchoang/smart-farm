@@ -1,0 +1,111 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav {
+    display: flex;
+    gap: 3rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.nav a {
+    font-size: 20px;
+    transform: scale(1);
+    transition: transform 0.6s ease;
+}
+
+.nav a:hover {
+    color: #22c55e;
+    text-decoration: underline;
+    transform: scale(1.3);
+    transition: transform 0.6s ease;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.search-input {
+    padding: 0.375rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 9999px;
+    outline: none;
+    width: 12rem;
+}
+
+.auth-split-button {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    height: 40px;
+    width: 200px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.auth-split-button .left-half,
+.auth-split-button .right-half {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-weight: 500;
+    z-index: 1;
+}
+
+.auth-split-button .left-half {
+    background-color: #22c55e;
+    /* xanh lá */
+    color: white;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+    transform: scale(1);
+    transition: transform 0.6s ease;
+    z-index: 1
+}
+
+.auth-split-button .left-half:hover {
+    transform: scale(1.2);
+    transition: transform 0.6s ease;
+}
+
+.auth-split-button .right-half {
+    background-color: #1f2937;
+    /* xám đen */
+    color: white;
+    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+    margin-left: -10%;
+    transform: scale(1);
+    transition: transform 0.8s ease;
+    z-index: 0;
+}
+
+.auth-split-button .right-half:hover {
+    transform: scale(1.2);
+    transition: transform 0.6s ease;
+    z-index: 1;
+}
+
+.lang-switch {
+    transform: scale(1);
+    transition: transform 0.6s ease;
+}
+
+.lang-switch:hover {
+    transform: scale(1.6);
+    transition: transform 0.6s ease;
+}

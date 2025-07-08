@@ -1,0 +1,28 @@
+{
+    "noProduct": "Không tìm thấy sản phẩm",
+    "heroContent": "Từ khu vườn Farmer",
+    "buttonSearch": "Tìm kiếm",
+    "productDeatil": "Thông tin sản phẩm",
+    "price": "Giá",
+    "availability": "Khả dụng",
+    "delivery": "Vận chuyển",
+    "minimumOrder": "Đơn hàng tối thiểu",
+    "addToCard": "Thêm vào giỏ hàng",
+    "productDescription": "Mô tả sản phẩm",
+    "description": [
+        {
+            "slug": "organic-cherry-tomatoes",
+            "description": "Những quả cà chua bi hữu cơ này được trồng trên những cánh đồng đầy nắng ở California. Chúng được hái bằng tay khi chín tới để đảm bảo hương vị ngọt ngào và mọng nước."
+        },
+        {
+            "slug": "organic-apple",
+            "description": "Táo hữu cơ tươi và ngon ngọt được hái trực tiếp từ vườn."
+        }
+    ],
+    "reputation": "Danh tiếng",
+    "note": "Xếp hạng và đánh giá được tổng hợp từ nền tảng blockchain của AgriChain",
+    "today":"Hôm nay",
+    "tomorrow":"Ngày mai",
+    "inStock":"Trong kho",
+    "limitedStock":"Số lượng có hạn"
+}

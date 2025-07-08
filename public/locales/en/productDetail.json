@@ -1,0 +1,28 @@
+{
+    "noProduct":"Product not found",
+    "heroContent":"From Farmer’s Garden",
+    "buttonSearch":"Search",
+    "productDeatil":"Product Details",
+    "price":"Price",
+    "availability":"Availability",
+    "delivery":"Delivery",
+    "minimumOrder":"Minimum Order",
+    "addToCard":"Add to Card",
+    "productDescription":"Product Description",
+    "description":[
+        {
+            "slug": "organic-cherry-tomatoes",
+            "description": "These organic cherry tomatoes are grown in the sunny fields of California. They are handpicked at peak ripeness to ensure a sweet and juicy flavor."
+        },
+        {
+            "slug": "organic-apple",
+            "description": "Fresh and juicy organic apples directly from the orchard."
+        }
+    ],
+    "reputation":"Reputation",
+    "note":"Ratings and reviews are aggregated from AgriChain's blockchain platform",
+    "today":"Today",
+    "tomorrow":"Tomorrow",
+    "inStock":"In Stock",
+    "limitedStock":"Limited Stock"
+}
