@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+/*datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}*/
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  password       String
+  image          String?
+  createdAt      DateTime  @default(now())
+  role           UserRole
+  shop           Shop?     @relation("UserShop")
+  orders         Order[]   @relation("UserOrders")
+  carts          Cart[]   // Reverse relation field to Cart
+  updatedAt      DateTime  @updatedAt
+}
+
+enum UserRole {
+  NORMAL_USER
+  SELLER
+  ADMIN
+  SUB_ADMIN
+}
+
+model Shop {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  ownerId         String   @unique  // Ensure the ownerId is unique for one-to-one relation
+  owner           User     @relation("UserShop", fields: [ownerId], references: [id])
+  products        Product[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Product {
+  id              String    @id @default(cuid())
+  name            String
+  price           Float
+  weight          Float
+  availability    Availability
+  delivery        Delivery
+  minOrder        String    // can be kg, gram, lbs, etc.
+  description     String
+  reputation      Int
+  images          Image[]   // list of image URLs
+  shopId          String
+  shop            Shop      @relation(fields: [shopId], references: [id])
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  carts           Cart[]   // Reverse relation field to Cart
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+enum Availability {
+  IN_STOCK
+  LIMITED_STOCK
+}
+
+enum Delivery {
+  TODAY
+  TOMORROW
+  SPECIFIC_DATE
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation("UserOrders", fields: [userId], references: [id])
+  totalAmount     Float
+  status          OrderStatus
+  orderedAt       DateTime  @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Category {
+  id              String    @id @default(cuid())
+  name            String    // Fruits, Vegetables, Meats, etc.
+  products        Product[] // Relation to Product model
+}
+
+model VerificationToken {
+  identifier String
+  token      String    @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+

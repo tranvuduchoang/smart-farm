@@ -10,6 +10,8 @@ import enLanding from "../public/locales/en/landing.json";
 import viLanding from "../public/locales/vi/landing.json";
 import enProductDetail from "../public/locales/en/productDetail.json";
 import viProductDetail from "../public/locales/vi/productDetail.json";
+import enAuth from "../public/locales/en/auth.json";
+import viAuth from "../public/locales/vi/auth.json";
 
 i18n
   .use(initReactI18next)
@@ -19,18 +21,20 @@ i18n
         header: enHeader,
         footer: enFooter,
         landing: enLanding,
-        productDetail: enProductDetail
+        productDetail: enProductDetail,
+        auth: enAuth
       },
       vi: {
         header: viHeader,
         footer: viFooter,
         landing: viLanding,
-        productDetail: viProductDetail
+        productDetail: viProductDetail,
+        auth: viAuth
       },
     },
     lng: "en",
     fallbackLng: "en",
-    ns: ["header", "footer", "landing", "productDetail"], // 👈 khai báo danh sách namespace
+    ns: ["header", "footer", "landing", "productDetail", "auth"], // 👈 khai báo danh sách namespace
     defaultNS: "header",
     interpolation: {
       escapeValue: false,

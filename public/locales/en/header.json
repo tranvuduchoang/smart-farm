@@ -4,5 +4,10 @@
   "suppliers": "Suppliers",
   "about": "About",
   "signup": "Sign up",
-  "login": "Log in"
+  "login": "Log in",
+  "accountDetail":"Account Detail",
+  "yourCart":"Your Cart",
+  "createYourOwnShop":"Creat your own shop",
+  "goToYourShop":"Go to your shop",
+  "logout":"Log out"
 }

@@ -37,12 +37,28 @@
     gap: 1.5rem;
 }
 
-.search-input {
-    padding: 0.375rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 9999px;
-    outline: none;
-    width: 12rem;
+/* Avatar styling */
+.avatar-menu {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Optional: Adjust language switch button */
+.lang-switch {
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.flag-icon {
+  border-radius: 5px;
 }
 
 .auth-split-button {

@@ -4,5 +4,10 @@
   "suppliers": "Nhà cung cấp",
   "about": "Giới thiệu",
   "signup": "Đăng ký",
-  "login": "Đăng nhập"
+  "login": "Đăng nhập",
+  "accountDetail":"Thông tin tài khoản",
+  "yourCart":"Giỏ hàng của bạn",
+  "createYourOwnShop":"Tạo cửa hàng",
+  "goToYourShop":"Cửa hàng của bạn",
+  "logout":"Đăng xuất"
 }
