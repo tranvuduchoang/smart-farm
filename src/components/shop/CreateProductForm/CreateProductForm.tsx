@@ -18,6 +18,7 @@ export default function CreateProductForm({ categories }: { categories: { id: st
     minOrder: "",
     description: "",
     categoryId: "",
+    images: [] as File[], // Thêm mảng để lưu các tệp hình ảnh
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -29,20 +30,37 @@ export default function CreateProductForm({ categories }: { categories: { id: st
     setForm((prev) => ({ ...prev, delivery: value }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+
+    // Kiểm tra xem files có phải là null hay không
+    if (files) {
+        setForm((prev) => ({ ...prev, images: Array.from(files) }));
+    }
+};
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    const formData = new FormData(); // Sử dụng FormData để gửi hình ảnh và dữ liệu cùng một lúc
+    formData.append("name", form.name);
+    formData.append("price", form.price);
+    formData.append("weight", form.weight);
+    formData.append("availability", form.availability);
+    formData.append("delivery", form.delivery);
+    formData.append("minOrder", form.minOrder);
+    formData.append("description", form.description);
+    formData.append("categoryId", form.categoryId);
+
+    // Thêm từng tệp hình ảnh vào FormData
+    form.images.forEach((image, index) => {
+      formData.append(`images[${index}]`, image);
+    });
+
     const res = await fetch("/api/shop/product/create", {
       method: "POST",
-      body: JSON.stringify({
-        ...form,
-        price: parseFloat(form.price),
-        weight: parseFloat(form.weight),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData,
     });
 
     if (res.ok) {
@@ -75,6 +93,8 @@ export default function CreateProductForm({ categories }: { categories: { id: st
           <option key={cat.id} value={cat.id}>{cat.name}</option>
         ))}
       </select>
+
+      <input type="file" multiple onChange={handleImageChange} /> {/* Chọn nhiều hình ảnh */}
 
       <button type="submit" disabled={loading}>
         {loading ? "Đang thêm..." : "➕ Thêm sản phẩm"}

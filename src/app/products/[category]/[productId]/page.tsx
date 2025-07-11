@@ -1,61 +1,76 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import prisma from "@/lib/prisma"; // Import Prisma
 import { Button } from "@/components/ui/button/button";
 import { FaShoppingCart } from "react-icons/fa";
 import "./product-detail.css";
 
-// interface Product {
-//     id:              String;
-//   name:            String;
-//   price:           String;
-//   weight:          String;
-//   availability:    String;
-//   delivery:        String;
-//   minOrder:        String;    // can be kg, gram, lbs, etc.
-//   description:     String;
-//   reputation:      String;
-//   images:          Image[];   // list of image URLs
-//   shopId:          String;
-//   categoryId:      String;
-//   createdAt:       String;
-//   updatedAt:       String;
-//   carts:           Cart[];
-// }
+// Định nghĩa kiểu Product
+interface Image {
+  id: string;
+  url: string;
+}
 
-export default async function ProductDetailPage() {
-    const { t } = await useTranslation("productDetail");
-    const { product } = useParams(); // Lấy product từ params
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  weight: number;
+  availability: string;
+  delivery: string;
+  minOrder: string;
+  description: string;
+  reputation: number;
+  images: Image[];  // Danh sách hình ảnh
+  category: {
+    name: string;
+  };
+}
 
-    // Kiểm tra xem product có phải là mảng không và lấy phần tử đầu tiên nếu cần
-    const productId = Array.isArray(product) ? product[0] : product;
+export default function ProductDetailPage() {
+    const { t } = useTranslation("productDetail");
+    const { category, productId } = useParams(); // Lấy productId từ params
 
-    // Kiểm tra nếu product có giá trị hợp lệ
-    if (!product) {
-        return <div>{t("noProduct")}</div>; // Nếu không có product
+    const [productData, setProductData] = useState<Product | null>(null); // Chỉ định kiểu cho state
+    const [loading, setLoading] = useState(true);
+
+    // Kiểm tra nếu productId không hợp lệ
+    if (!productId) {
+        return <div>{t("no product ID")}</div>; // Nếu không có productId
     }
 
-    // Lấy thông tin sản phẩm từ database bằng Prisma qua product id
-    const productData = await prisma.product.findUnique({
-        where: {
-            id: productId, // Truy vấn sản phẩm theo id
-        },
-        include: {
-            images: true, // Lấy các hình ảnh của sản phẩm
-            category: true, // Lấy thông tin category liên quan (nếu cần)
-        },
-    });
+    useEffect(() => {
+        // Fetch dữ liệu sản phẩm từ API hoặc Prisma
+        const fetchProductData = async () => {
+            try {
+                const response = await fetch(`/api/products/${productId}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch product");
+                }
+                const data = await response.json();
+                setProductData(data);  // Lưu dữ liệu vào state
+            } catch (error) {
+                console.error("Error fetching product:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProductData();
+    }, [productId]); // Khi productId thay đổi, fetch lại dữ liệu
+
+    // Nếu đang trong quá trình loading
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     // Nếu không tìm thấy sản phẩm
     if (!productData) {
         return <div>{t("noProduct")}</div>;
     }
-
-    // // Mô tả sản phẩm từ file dịch (nếu có)
-    // const translatedDescription = t("description", { returnObjects: true }) as { slug: string, description: string }[];
-    // const description = translatedDescription.find((item) => item.slug === productData.slug)?.description ?? productData.description;
 
     return (
         <div className="product-detail-page">

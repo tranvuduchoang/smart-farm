@@ -2,7 +2,6 @@
 
 import "./CreateProduct.css";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import CreateProductForm from "@/components/shop/CreateProductForm/CreateProductForm"; // Import Client Component
 
 export default function CreateProductPage() {

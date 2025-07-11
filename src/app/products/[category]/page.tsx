@@ -4,7 +4,8 @@ import { getServerTranslation } from "@/lib/i18nServer";
 import Link from "next/link";
 import "./product-list.css";
 
-export default async function ProductListPage({ params }: { params: { category: string } }) {
+export default async function ProductListPage(props: { params: Promise<{ category: string }> }) {
+  const params = await props.params;
   const lang = "vi"; // hoặc lấy từ headers nếu cần
   const { t } = await getServerTranslation("landing", lang);
 
