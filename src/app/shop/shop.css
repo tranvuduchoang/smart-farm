@@ -1,0 +1,43 @@
+.shop-container {
+  max-width: 768px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-shop-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-shop-btn:hover {
+  background-color: #b02a37;
+}
+
+.shop-products {
+  margin-top: 32px;
+}
+
+.shop-product-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.shop-product-card p {
+  margin: 0;
+}

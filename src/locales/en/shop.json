@@ -1,0 +1,11 @@
+{
+  "yourShop": "Shop",
+  "noDescription": "No description.",
+  "editShop": "Edit shop information",
+  "products": "Products",
+  "addProduct": "Add product",
+  "noProductYet": "No products yet.",
+  "edit": "Edit",
+  "delete": "Delete",
+  "confirmDeleteProduct": "Are you sure you want to delete this product?"
+}

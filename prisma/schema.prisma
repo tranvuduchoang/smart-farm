@@ -119,9 +119,10 @@ enum OrderStatus {
 }
 
 model Category {
-  id              String    @id @default(cuid())
-  name            String    // Fruits, Vegetables, Meats, etc.
-  products        Product[] // Relation to Product model
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique // thêm slug để làm khóa duy nhất
+  products  Product[]
 }
 
 model VerificationToken {

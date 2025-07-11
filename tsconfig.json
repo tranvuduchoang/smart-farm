@@ -1,3 +1,7 @@
+/*
+Nếu muốn cập nhật category thì thay đổi "module": "esnext" thành "module": "CommonJS", và chạy lệnh npx ts-node prisma/seed.ts
+*/
+
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -22,6 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types", "prisma/seed.ts"],
   "exclude": ["node_modules"]
 }

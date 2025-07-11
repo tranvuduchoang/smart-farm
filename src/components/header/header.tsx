@@ -20,6 +20,11 @@ export default function HeaderComponent() {
 
   const handleLanguageSwitch = () => {
     i18n.changeLanguage(nextLang);
+    // Cập nhật cookie ngôn ngữ cho server
+    //document.cookie = `i18next=${nextLang}; path=/`;
+
+    // Reload lại để Server Component lấy đúng lang từ cookie
+    //window.location.reload();
   };
 
   const handleLogout = () => {
@@ -62,6 +67,8 @@ export default function HeaderComponent() {
       danger: true
     },
   ];
+  console.log("SESSION", session);
+
 
   return (
     <header className="header">

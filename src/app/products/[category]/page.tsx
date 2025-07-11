@@ -1,47 +1,67 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import { mockProducts } from "@/data/products";
-import "./product-list.css";
+// src/app/products/[category]/page.tsx
+import prisma from "@/lib/prisma";
+import { getServerTranslation } from "@/lib/i18nServer";
 import Link from "next/link";
+import "./product-list.css";
 
-export default function ProductListPage() {
-    const { t } = useTranslation("landing");
-    const params = useParams();
-    const category = Array.isArray(params.category) ? params.category[0] : params.category;
+export default async function ProductListPage({ params }: { params: { category: string } }) {
+  const lang = "vi"; // hoặc lấy từ headers nếu cần
+  const { t } = await getServerTranslation("landing", lang);
 
-    // lấy categories từ file dịch
-    const categories = t("categories", { returnObjects: true }) as {
-        name: string;
-        slug: string;
-        image: string;
-    }[];
+  // Lấy category slug từ params
+  const categorySlug = params.category;
 
-    const title = t("productListTitle");
-    const categoryData = categories.find((c) => c.slug === category);
-    const products = mockProducts.filter((p) => p.category === category);
+  // Lấy thông tin category từ database dựa vào slug
+  const categoryInDb = await prisma.category.findUnique({
+    where: { slug: categorySlug },
+  });
 
+  // Nếu không tìm thấy category, trả về thông báo
+  if (!categoryInDb) {
     return (
-        <div className="product-page">
-            <h1 className="product-title">
-                {title}: {categoryData?.name ?? category}
-            </h1>
-
-            <div className="product-grid">
-                {products.map((p) => (
-                    <Link key={p.name} href={`/products/${p.category}/${p.slug}`}>
-                        <div  className="product-card">
-                            <img src={p.image} alt={p.name} className="product-image" />
-                            <div className="product-info">
-                                <p className="product-name">{p.name}</p>
-                                <p className="product-price">{p.price}</p>
-                                <p className="product-weight">{p.weight}</p>
-                            </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-        </div>
+      <div className="product-page">
+        <h1 className="product-title">{t("productListTitle")}: {categorySlug}</h1>
+        <p>Không tìm thấy danh mục này trong hệ thống.</p>
+      </div>
     );
+  }
+
+  // Lấy sản phẩm từ database dựa vào categoryId
+  const products = await prisma.product.findMany({
+    where: { categoryId: categoryInDb.id },
+    include: { images: true }, // Lấy hình ảnh của sản phẩm
+  });
+
+  const title = t("productListTitle");
+
+  return (
+    <div className="product-page">
+      <h1 className="product-title">
+        {title}: {categoryInDb.name}
+      </h1>
+
+      <div className="product-grid">
+        {products.length === 0 ? (
+          <p>Không có sản phẩm nào trong danh mục này.</p>
+        ) : (
+          products.map((p) => (
+            <Link key={p.id} href={`/products/${categorySlug}/${p.id}`}>
+              <div className="product-card">
+                <img
+                  src={p.images[0]?.url || "/default-product.png"}
+                  alt={p.name}
+                  className="product-image"
+                />
+                <div className="product-info">
+                  <p className="product-name">{p.name}</p>
+                  <p className="product-price">{p.price}₫</p>
+                  <p className="product-weight">{p.weight}kg</p>
+                </div>
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+    </div>
+  );
 }

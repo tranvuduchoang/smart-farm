@@ -1,10 +1,11 @@
+// src/app/landing/page.tsx
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button/button";
 import "../landing/landing.css";
 import { useTranslation } from "react-i18next";
-import Link from "next/link";
+import CategorySection from "@/components/categories/CategorySection";
+import { useEffect, useState } from "react";
 
 interface HeroContent {
   title: string;
@@ -13,18 +14,28 @@ interface HeroContent {
   buttonSearch: string;
 }
 
-interface CategoryItem {
-  slug: string;
+export interface CategoryItem {
+  id: string;
   name: string;
+  slug: string;
   image: string;
 }
 
 export default function LandingPage() {
   const { t } = useTranslation("landing");
-
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  
   const hero = t("hero", { returnObjects: true }) as HeroContent;
-  const categories = t("categories", { returnObjects: true }) as CategoryItem[];
-  const sectionTitle = t("sectionTitle");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch("/api/categories");
+      const data = await response.json();
+      setCategories(data);
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="homepage">
@@ -46,25 +57,7 @@ export default function LandingPage() {
       </section>
 
       {/* Category Section */}
-      <section className="category-section">
-        <h2 className="section-title">{sectionTitle}</h2>
-        <div className="category-grid">
-          {categories.map((item: any) => (
-            <Link key={item.slug} href={`/products/${item.slug.toLowerCase()}`}>
-              <div className="category-item">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  width={200}
-                  height={200}
-                  className="category-image"
-                />
-                <p className="category-name">{item.name}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <CategorySection categories={categories} />
     </div>
   );
 }
