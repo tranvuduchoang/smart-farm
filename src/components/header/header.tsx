@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useSession, signOut } from "next-auth/react";
 import type { MenuProps } from "antd";
-import { Dropdown, Space } from "antd";
+import { Dropdown } from "antd";
 import { RxAvatar } from "react-icons/rx";
 import { FaShoppingCart } from "react-icons/fa";
 import { useState, useEffect } from "react";
