@@ -18,6 +18,7 @@ import Image from "next/image";
 import "./suppliers.css";
 
 export default function SuppliersPage() {
+  const router = useRouter();
   const [filteredSuppliers, setFilteredSuppliers] =
     useState<Supplier[]>(suppliers);
   const [searchTerm, setSearchTerm] = useState("");
