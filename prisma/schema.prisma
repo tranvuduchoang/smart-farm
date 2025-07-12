@@ -42,8 +42,10 @@ model User {
   createdAt      DateTime  @default(now())
   role           UserRole
   shop           Shop?     @relation("UserShop")
+  supplier       Supplier? @relation("SupplierOwner")
   orders         Order[]   @relation("UserOrders")
-  carts          Cart[]   // Reverse relation field to Cart
+  carts          Cart[]    // Reverse relation field to Cart
+  cartItems      CartItem[] @relation("UserCartItems")
   updatedAt      DateTime  @updatedAt
 }
 
