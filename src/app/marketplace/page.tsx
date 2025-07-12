@@ -143,7 +143,7 @@ export default function MarketplacePage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        await response.json();
         alert("Đã thêm sản phẩm vào giỏ hàng!");
       } else {
         const errorData = await response.json();
@@ -151,7 +151,7 @@ export default function MarketplacePage() {
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Đã x��y ra lỗi khi thêm vào giỏ hàng");
+      alert("Đã xảy ra lỗi khi thêm vào giỏ hàng");
     } finally {
       setAddingToCart(null);
     }
