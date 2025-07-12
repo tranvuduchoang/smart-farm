@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { suppliers, Supplier } from "@/data/suppliers";
 import {
   FaSearch,
@@ -88,7 +89,7 @@ export default function SuppliersPage() {
       {/* Hero Section */}
       <section className="suppliers-hero">
         <div className="hero-content">
-          <h1>Nhà cung cấp uy t��n</h1>
+          <h1>Nhà cung cấp uy tín</h1>
           <p>Kết nối với các nông trại và nhà cung cấp hàng đầu Việt Nam</p>
 
           {/* Search and Filters */}
