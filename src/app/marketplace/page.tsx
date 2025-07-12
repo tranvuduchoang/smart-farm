@@ -192,7 +192,7 @@ export default function MarketplacePage() {
               onClick={() => setShowFilters(!showFilters)}
             >
               <FaFilter />
-              Bộ l��c
+              Bộ lọc
             </button>
           </div>
         </div>
@@ -354,10 +354,19 @@ export default function MarketplacePage() {
                     </span>
                   )}
                   <div className="product-actions">
-                    <button className="action-btn">
+                    <button
+                      className="action-btn"
+                      onClick={() => toggleFavorite(product.id)}
+                      title="Thêm vào yêu thích"
+                    >
                       <FaHeart />
                     </button>
-                    <button className="action-btn cart-btn">
+                    <button
+                      className="action-btn cart-btn"
+                      onClick={() => addToCart(product.id)}
+                      disabled={addingToCart === product.id}
+                      title="Thêm vào giỏ hàng"
+                    >
                       <FaShoppingCart />
                     </button>
                   </div>
