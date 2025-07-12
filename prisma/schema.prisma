@@ -103,18 +103,97 @@ enum Delivery {
   SPECIFIC_DATE
 }
 
+model Supplier {
+  id              String            @id @default(cuid())
+  name            String
+  description     String            @db.Text
+  location        String
+  image           String?
+  rating          Float             @default(0)
+  reviewCount     Int               @default(0)
+  products        String            @db.Text // JSON array of product names
+  certifications  String            @db.Text // JSON array of certifications
+  established     Int
+  farmSize        String
+  specialties     String            @db.Text // JSON array of specialties
+  contactPhone    String
+  contactEmail    String
+  contactWebsite  String?
+  totalProducts   Int               @default(0)
+  monthlyOrders   Int               @default(0)
+  satisfactionRate Float            @default(0)
+  ownerId         String?           @unique
+  owner           User?             @relation("SupplierOwner", fields: [ownerId], references: [id])
+  supplierProducts SupplierProduct[]
+  orders          Order[]           @relation("SupplierOrders")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model SupplierProduct {
+  id              String      @id @default(cuid())
+  name            String
+  price           Float
+  unit            String      // kg, gram, liter, etc.
+  availability    Availability
+  delivery        Delivery
+  minOrder        String
+  description     String      @db.Text
+  images          String      @db.Text // JSON array of image URLs
+  supplierId      String
+  supplier        Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category    @relation(fields: [categoryId], references: [id])
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model CartItem {
+  id                String          @id @default(cuid())
+  userId            String
+  supplierProductId String
+  quantity          Int             @default(1)
+  user              User            @relation("UserCartItems", fields: [userId], references: [id])
+  supplierProduct   SupplierProduct @relation(fields: [supplierProductId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
 model Order {
-  id              String    @id @default(cuid())
+  id              String      @id @default(cuid())
   userId          String
-  user            User      @relation("UserOrders", fields: [userId], references: [id])
+  supplierId      String?
+  user            User        @relation("UserOrders", fields: [userId], references: [id])
+  supplier        Supplier?   @relation("SupplierOrders", fields: [supplierId], references: [id])
   totalAmount     Float
   status          OrderStatus
-  orderedAt       DateTime  @default(now())
+  items           OrderItem[]
+  shippingAddress String      @db.Text
+  notes           String?     @db.Text
+  orderedAt       DateTime    @default(now())
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id                String          @id @default(cuid())
+  orderId           String
+  supplierProductId String
+  quantity          Int
+  price             Float
+  order             Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  supplierProduct   SupplierProduct @relation(fields: [supplierProductId], references: [id])
+  createdAt         DateTime        @default(now())
 }
 
 enum OrderStatus {
   PENDING
-  COMPLETED
+  CONFIRMED
+  SHIPPED
+  DELIVERED
   CANCELLED
 }
 
@@ -132,4 +211,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
