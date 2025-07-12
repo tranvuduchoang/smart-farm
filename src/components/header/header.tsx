@@ -75,9 +75,9 @@ export default function HeaderComponent() {
       <div className="logo">AgriChain</div>
       <nav className="nav">
         <a href="/">{t("home")}</a>
-        <a href="#">{t("marketplace")}</a>
-        <a href="#">{t("suppliers")}</a>
-        <a href="#">{t("about")}</a>
+        <a href="/marketplace">{t("marketplace")}</a>
+        <a href="/suppliers">{t("suppliers")}</a>
+        <a href="/about">{t("about")}</a>
       </nav>
       <div className="actions">
         {session?.user ? (
