@@ -22,6 +22,8 @@ import Image from "next/image";
 import "./marketplace.css";
 
 export default function MarketplacePage() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>(marketplaceProducts);
   const [filteredProducts, setFilteredProducts] =
     useState<Product[]>(marketplaceProducts);
@@ -33,6 +35,7 @@ export default function MarketplacePage() {
   const [showFreshOnly, setShowFreshOnly] = useState(false);
   const [sortBy, setSortBy] = useState("popular");
   const [showFilters, setShowFilters] = useState(false);
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
     let filtered = [...products];
@@ -302,7 +305,7 @@ export default function MarketplacePage() {
                   )}
                   {product.organic && (
                     <span className="organic-badge">
-                      <FaLeaf /> H��u cơ
+                      <FaLeaf /> Hữu cơ
                     </span>
                   )}
                   <div className="product-actions">
