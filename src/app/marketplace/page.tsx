@@ -157,7 +157,7 @@ export default function MarketplacePage() {
     }
   };
 
-  const toggleFavorite = async (productId: string) => {
+  const toggleFavorite = async (_productId: string) => {
     if (!session) {
       router.push("/auth");
       return;
