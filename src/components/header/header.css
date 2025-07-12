@@ -1,40 +1,97 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .nav {
-    display: flex;
-    gap: 3rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+  display: flex;
+  gap: 3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .nav a {
-    font-size: 20px;
-    transform: scale(1);
-    transition: transform 0.6s ease;
+  font-size: 20px;
+  transform: scale(1);
+  transition: transform 0.6s ease;
 }
 
 .nav a:hover {
-    color: #22c55e;
-    text-decoration: underline;
-    transform: scale(1.3);
-    transition: transform 0.6s ease;
+  color: #22c55e;
+  text-decoration: underline;
+  transform: scale(1.3);
+  transition: transform 0.6s ease;
 }
 
 .actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.cart-icon-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cart-icon-container {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cart-icon-container:hover {
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.cart-icon {
+  font-size: 1.5rem;
+  color: #34495e;
+  transition: color 0.3s ease;
+}
+
+.cart-icon-container:hover .cart-icon {
+  color: #27ae60;
+}
+
+.cart-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Avatar styling */
@@ -62,66 +119,66 @@
 }
 
 .auth-split-button {
-    position: relative;
-    display: inline-flex;
-    overflow: hidden;
-    padding: 0;
-    border: none;
-    height: 40px;
-    width: 200px;
-    border-radius: 8px;
-    cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  height: 40px;
+  width: 200px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .auth-split-button .left-half,
 .auth-split-button .right-half {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    font-weight: 500;
-    z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 500;
+  z-index: 1;
 }
 
 .auth-split-button .left-half {
-    background-color: #22c55e;
-    /* xanh lá */
-    color: white;
-    clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
-    transform: scale(1);
-    transition: transform 0.6s ease;
-    z-index: 1
+  background-color: #22c55e;
+  /* xanh lá */
+  color: white;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+  transform: scale(1);
+  transition: transform 0.6s ease;
+  z-index: 1;
 }
 
 .auth-split-button .left-half:hover {
-    transform: scale(1.2);
-    transition: transform 0.6s ease;
+  transform: scale(1.2);
+  transition: transform 0.6s ease;
 }
 
 .auth-split-button .right-half {
-    background-color: #1f2937;
-    /* xám đen */
-    color: white;
-    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
-    margin-left: -10%;
-    transform: scale(1);
-    transition: transform 0.8s ease;
-    z-index: 0;
+  background-color: #1f2937;
+  /* xám đen */
+  color: white;
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+  margin-left: -10%;
+  transform: scale(1);
+  transition: transform 0.8s ease;
+  z-index: 0;
 }
 
 .auth-split-button .right-half:hover {
-    transform: scale(1.2);
-    transition: transform 0.6s ease;
-    z-index: 1;
+  transform: scale(1.2);
+  transition: transform 0.6s ease;
+  z-index: 1;
 }
 
 .lang-switch {
-    transform: scale(1);
-    transition: transform 0.6s ease;
+  transform: scale(1);
+  transition: transform 0.6s ease;
 }
 
 .lang-switch:hover {
-    transform: scale(1.6);
-    transition: transform 0.6s ease;
+  transform: scale(1.6);
+  transition: transform 0.6s ease;
 }
