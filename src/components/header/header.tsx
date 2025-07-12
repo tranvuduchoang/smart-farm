@@ -19,6 +19,7 @@ export default function HeaderComponent() {
   const currentLang = i18n.language as "vi" | "en";
   const nextLang = currentLang === "vi" ? "en" : "vi";
   const { data: session } = useSession();
+  const [cartCount, setCartCount] = useState(0);
 
   const handleLanguageSwitch = () => {
     i18n.changeLanguage(nextLang);
