@@ -200,10 +200,11 @@ enum OrderStatus {
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String
-  slug      String    @unique // thêm slug để làm khóa duy nhất
-  products  Product[]
+  id               String            @id @default(cuid())
+  name             String
+  slug             String            @unique // thêm slug để làm khóa duy nhất
+  products         Product[]
+  supplierProducts SupplierProduct[]
 }
 
 model VerificationToken {
