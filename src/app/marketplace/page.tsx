@@ -122,6 +122,51 @@ export default function MarketplacePage() {
     }).format(price);
   };
 
+  const addToCart = async (productId: string) => {
+    if (!session) {
+      router.push("/auth");
+      return;
+    }
+
+    setAddingToCart(productId);
+
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          supplierProductId: productId,
+          quantity: 1,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert("Đã thêm sản phẩm vào giỏ hàng!");
+      } else {
+        const errorData = await response.json();
+        alert(`Lỗi: ${errorData.message || "Không thể thêm vào giỏ hàng"}`);
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Đã xảy ra lỗi khi thêm vào giỏ hàng");
+    } finally {
+      setAddingToCart(null);
+    }
+  };
+
+  const toggleFavorite = async (productId: string) => {
+    if (!session) {
+      router.push("/auth");
+      return;
+    }
+
+    // Implement favorite functionality here
+    alert("Tính năng yêu thích sẽ được phát triển trong tương lai");
+  };
+
   return (
     <div className="marketplace-page">
       {/* Hero Section */}
@@ -147,7 +192,7 @@ export default function MarketplacePage() {
               onClick={() => setShowFilters(!showFilters)}
             >
               <FaFilter />
-              Bộ lọc
+              Bộ l��c
             </button>
           </div>
         </div>
