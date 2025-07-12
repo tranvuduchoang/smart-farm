@@ -72,7 +72,7 @@ export default async function ShopPage() {
                   >
                     {t("edit")}
                   </Link>
-                  <DeleteProductButton productId={product.id} confirmText={t("confirmDeleteProduct")} />
+                  <DeleteProductButton productId={product.id} confirmText={`Bạn có chắc chắn muốn xóa sản phẩm "${product.name}"? ID:"${product.id}"`} />
                 </div>
               </li>
             ))}
