@@ -1,14 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { marketplaceProducts, productCategories, filters, Product } from "@/data/marketplace";
-import { FaSearch, FaFilter, FaHeart, FaShoppingCart, FaStar, FaLeaf, FaMapMarkerAlt } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import {
+  marketplaceProducts,
+  productCategories,
+  filters,
+  Product,
+} from "@/data/marketplace";
+import {
+  FaSearch,
+  FaFilter,
+  FaHeart,
+  FaShoppingCart,
+  FaStar,
+  FaLeaf,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 import Image from "next/image";
 import "./marketplace.css";
 
 export default function MarketplacePage() {
-  const [products, setProducts] = useState<Product[]>(marketplaceProducts);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(marketplaceProducts);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [products] = useState<Product[]>(marketplaceProducts);
+  const [filteredProducts, setFilteredProducts] =
+    useState<Product[]>(marketplaceProducts);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedPriceRange, setSelectedPriceRange] = useState("");
@@ -17,46 +35,54 @@ export default function MarketplacePage() {
   const [showFreshOnly, setShowFreshOnly] = useState(false);
   const [sortBy, setSortBy] = useState("popular");
   const [showFilters, setShowFilters] = useState(false);
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
     let filtered = [...products];
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+      filtered = filtered.filter(
+        (product) => product.category === selectedCategory,
+      );
     }
 
     // Price range filter
     if (selectedPriceRange) {
-      const range = filters.priceRanges.find(r => r.id === selectedPriceRange);
+      const range = filters.priceRanges.find(
+        (r) => r.id === selectedPriceRange,
+      );
       if (range) {
-        filtered = filtered.filter(product => 
-          product.price >= range.min && product.price <= range.max
+        filtered = filtered.filter(
+          (product) => product.price >= range.min && product.price <= range.max,
         );
       }
     }
 
     // Location filter
     if (selectedLocation) {
-      filtered = filtered.filter(product => product.location.includes(selectedLocation));
+      filtered = filtered.filter((product) =>
+        product.location.includes(selectedLocation),
+      );
     }
 
     // Organic filter
     if (showOrganicOnly) {
-      filtered = filtered.filter(product => product.organic);
+      filtered = filtered.filter((product) => product.organic);
     }
 
     // Fresh filter
     if (showFreshOnly) {
-      filtered = filtered.filter(product => product.fresh);
+      filtered = filtered.filter((product) => product.fresh);
     }
 
     // Sorting
@@ -78,13 +104,67 @@ export default function MarketplacePage() {
     }
 
     setFilteredProducts(filtered);
-  }, [searchTerm, selectedCategory, selectedPriceRange, selectedLocation, showOrganicOnly, showFreshOnly, sortBy, products]);
+  }, [
+    searchTerm,
+    selectedCategory,
+    selectedPriceRange,
+    selectedLocation,
+    showOrganicOnly,
+    showFreshOnly,
+    sortBy,
+    products,
+  ]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
     }).format(price);
+  };
+
+  const addToCart = async (productId: string) => {
+    if (!session) {
+      router.push("/auth");
+      return;
+    }
+
+    setAddingToCart(productId);
+
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          supplierProductId: productId,
+          quantity: 1,
+        }),
+      });
+
+      if (response.ok) {
+        await response.json();
+        alert("Đã thêm sản phẩm vào giỏ hàng!");
+      } else {
+        const errorData = await response.json();
+        alert(`Lỗi: ${errorData.message || "Không thể thêm vào giỏ hàng"}`);
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Đã xảy ra lỗi khi thêm vào giỏ hàng");
+    } finally {
+      setAddingToCart(null);
+    }
+  };
+
+  const toggleFavorite = async (_productId: string) => {
+    if (!session) {
+      router.push("/auth");
+      return;
+    }
+
+    // Implement favorite functionality here
+    alert("Tính năng yêu thích sẽ được phát triển trong tương lai");
   };
 
   return (
@@ -94,7 +174,7 @@ export default function MarketplacePage() {
         <div className="hero-content">
           <h1>Chợ nông sản AgriChain</h1>
           <p>Khám phá hàng ngàn sản phẩm tươi ngon từ các nông trại uy tín</p>
-          
+
           {/* Search Bar */}
           <div className="search-container">
             <div className="search-box-marketplace">
@@ -107,7 +187,7 @@ export default function MarketplacePage() {
                 className="search-input"
               />
             </div>
-            <button 
+            <button
               className="filter-toggle"
               onClick={() => setShowFilters(!showFilters)}
             >
@@ -120,7 +200,7 @@ export default function MarketplacePage() {
 
       <div className="marketplace-content">
         {/* Sidebar Filters */}
-        <aside className={`filters-sidebar ${showFilters ? 'show' : ''}`}>
+        <aside className={`filters-sidebar ${showFilters ? "show" : ""}`}>
           <div className="filter-section">
             <h3>Danh mục</h3>
             <div className="filter-options">
@@ -134,7 +214,7 @@ export default function MarketplacePage() {
                 />
                 Tất cả ({marketplaceProducts.length})
               </label>
-              {productCategories.map(category => (
+              {productCategories.map((category) => (
                 <label key={category.id} className="filter-option">
                   <input
                     type="radio"
@@ -162,7 +242,7 @@ export default function MarketplacePage() {
                 />
                 Tất cả
               </label>
-              {filters.priceRanges.map(range => (
+              {filters.priceRanges.map((range) => (
                 <label key={range.id} className="filter-option">
                   <input
                     type="radio"
@@ -190,7 +270,7 @@ export default function MarketplacePage() {
                 />
                 Tất cả
               </label>
-              {filters.locations.map(location => (
+              {filters.locations.map((location) => (
                 <label key={location} className="filter-option">
                   <input
                     type="radio"
@@ -239,8 +319,8 @@ export default function MarketplacePage() {
             </div>
             <div className="sort-options">
               <label>Sắp xếp theo:</label>
-              <select 
-                value={sortBy} 
+              <select
+                value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="sort-select"
               >
@@ -255,7 +335,7 @@ export default function MarketplacePage() {
 
           {/* Product Grid */}
           <div className="products-grid">
-            {filteredProducts.map(product => (
+            {filteredProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <div className="product-image-container">
                   <Image
@@ -274,34 +354,45 @@ export default function MarketplacePage() {
                     </span>
                   )}
                   <div className="product-actions">
-                    <button className="action-btn">
+                    <button
+                      className="action-btn"
+                      onClick={() => toggleFavorite(product.id)}
+                      title="Thêm vào yêu thích"
+                    >
                       <FaHeart />
                     </button>
-                    <button className="action-btn cart-btn">
+                    <button
+                      className="action-btn cart-btn"
+                      onClick={() => addToCart(product.id)}
+                      disabled={addingToCart === product.id}
+                      title="Thêm vào giỏ hàng"
+                    >
                       <FaShoppingCart />
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="product-info">
                   <h3 className="product-name">{product.name}</h3>
                   <div className="product-location">
                     <FaMapMarkerAlt />
                     <span>{product.location}</span>
                   </div>
-                  <div className="product-seller">
-                    Bởi: {product.seller}
-                  </div>
+                  <div className="product-seller">Bởi: {product.seller}</div>
                   <div className="product-rating">
                     <div className="stars">
                       {[...Array(5)].map((_, i) => (
-                        <FaStar 
-                          key={i} 
-                          className={i < Math.floor(product.rating) ? 'filled' : ''} 
+                        <FaStar
+                          key={i}
+                          className={
+                            i < Math.floor(product.rating) ? "filled" : ""
+                          }
                         />
                       ))}
                     </div>
-                    <span>{product.rating} ({product.reviewCount})</span>
+                    <span>
+                      {product.rating} ({product.reviewCount})
+                    </span>
                   </div>
                   <div className="product-price">
                     {product.originalPrice && (
@@ -313,8 +404,14 @@ export default function MarketplacePage() {
                       {formatPrice(product.price)}/{product.unit}
                     </span>
                   </div>
-                  <button className="add-to-cart-btn">
-                    Thêm vào giỏ hàng
+                  <button
+                    className="add-to-cart-btn"
+                    onClick={() => addToCart(product.id)}
+                    disabled={addingToCart === product.id}
+                  >
+                    {addingToCart === product.id
+                      ? "Đang thêm..."
+                      : "Thêm vào giỏ hàng"}
                   </button>
                 </div>
               </div>
