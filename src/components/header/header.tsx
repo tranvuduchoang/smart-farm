@@ -79,13 +79,21 @@ export default function HeaderComponent() {
       label: <Link href="/cart">{t("yourCart")}</Link>,
     },
     // Conditionally render menu options based on user role
+    // ...(session?.user?.role === "NORMAL_USER"
+    //   ? [
+    //     {
+    //       key: "3",
+    //       label: <Link href="/shop/create">{t("createYourOwnShop")}</Link>, // "Create your own shop" for normal users
+    //     },
+    //   ]
+    //   : []),
     ...(session?.user?.role === "NORMAL_USER"
       ? [
-          {
-            key: "3",
-            label: <Link href="/shop/create">{t("createYourOwnShop")}</Link>, // "Create your own shop" for normal users
-          },
-        ]
+        {
+          key: "3",
+          label: <Link href="/suppliers/create">{t("create Your Own supplier")}</Link>, // "Create your own shop" for normal users
+        },
+      ]
       : []),
     ...(session?.user?.role === "SELLER"
       ? [
