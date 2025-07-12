@@ -116,6 +116,15 @@ export default function HeaderComponent() {
         <a href="/about">{t("about")}</a>
       </nav>
       <div className="actions">
+        {session?.user && (
+          <Link href="/cart" className="cart-icon-link">
+            <div className="cart-icon-container">
+              <FaShoppingCart className="cart-icon" />
+              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            </div>
+          </Link>
+        )}
+
         {session?.user ? (
           <div className="avatar-menu">
             <Dropdown menu={{ items }} trigger={["click"]}>
