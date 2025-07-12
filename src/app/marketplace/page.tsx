@@ -404,7 +404,15 @@ export default function MarketplacePage() {
                       {formatPrice(product.price)}/{product.unit}
                     </span>
                   </div>
-                  <button className="add-to-cart-btn">Thêm vào giỏ hàng</button>
+                  <button
+                    className="add-to-cart-btn"
+                    onClick={() => addToCart(product.id)}
+                    disabled={addingToCart === product.id}
+                  >
+                    {addingToCart === product.id
+                      ? "Đang thêm..."
+                      : "Thêm vào giỏ hàng"}
+                  </button>
                 </div>
               </div>
             ))}
