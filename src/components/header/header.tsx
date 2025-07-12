@@ -34,6 +34,40 @@ export default function HeaderComponent() {
     signOut({ callbackUrl: "/" });
   };
 
+  const fetchCartCount = async () => {
+    if (!session) {
+      setCartCount(0);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/cart");
+      if (response.ok) {
+        const data = await response.json();
+        setCartCount(data.count || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching cart count:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+  }, [session]);
+
+  // Re-fetch cart count when user navigates back to the site
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchCartCount();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [session]);
+
   // Menu items for Dropdown
   const items: MenuProps["items"] = [
     {
