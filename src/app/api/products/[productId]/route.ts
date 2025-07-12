@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"; // Prisma client
 
-export async function GET(req: Request, { params }: { params: { productId: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ productId: string }> }) {
+    const params = await props.params;
     const { productId } = params;
 
     // Truy vấn sản phẩm từ database dựa trên productId
