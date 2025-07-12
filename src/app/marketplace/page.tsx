@@ -24,7 +24,7 @@ import "./marketplace.css";
 export default function MarketplacePage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>(marketplaceProducts);
+  const [products] = useState<Product[]>(marketplaceProducts);
   const [filteredProducts, setFilteredProducts] =
     useState<Product[]>(marketplaceProducts);
   const [searchTerm, setSearchTerm] = useState("");
@@ -151,7 +151,7 @@ export default function MarketplacePage() {
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Đã xảy ra lỗi khi thêm vào giỏ hàng");
+      alert("Đã x��y ra lỗi khi thêm vào giỏ hàng");
     } finally {
       setAddingToCart(null);
     }
