@@ -11,6 +11,9 @@ import { Dropdown } from "antd";
 import { RxAvatar } from "react-icons/rx";
 import { FaShoppingCart } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { WalletConnect } from "@/components/wallet/WalletConnect";
+import { useAccount } from "wagmi";
+import { useTokenBalance, useVerificationStatus } from "@/hooks/useAgriChain";
 
 import i18n from "@/i18n";
 
@@ -20,6 +23,11 @@ export default function HeaderComponent() {
   const nextLang = currentLang === "vi" ? "en" : "vi";
   const { data: session } = useSession();
   const [cartCount, setCartCount] = useState(0);
+
+  // Web3 hooks
+  const { address, isConnected } = useAccount();
+  const { data: tokenBalance } = useTokenBalance();
+  const { isFarmer, isBuyer, isVerified } = useVerificationStatus();
 
   const handleLanguageSwitch = () => {
     i18n.changeLanguage(nextLang);
@@ -89,11 +97,15 @@ export default function HeaderComponent() {
     //   : []),
     ...(session?.user?.role === "NORMAL_USER"
       ? [
-        {
-          key: "3",
-          label: <Link href="/suppliers/create">{t("create Your Own supplier")}</Link>, // "Create your own shop" for normal users
-        },
-      ]
+          {
+            key: "3",
+            label: (
+              <Link href="/suppliers/create">
+                {t("create Your Own supplier")}
+              </Link>
+            ), // "Create your own shop" for normal users
+          },
+        ]
       : []),
     ...(session?.user?.role === "SELLER"
       ? [
@@ -124,6 +136,25 @@ export default function HeaderComponent() {
         <a href="/about">{t("about")}</a>
       </nav>
       <div className="actions">
+        {/* Web3 Wallet Connection */}
+        <div className="wallet-section">
+          <WalletConnect />
+          {isConnected && tokenBalance && (
+            <div className="token-balance">
+              <span className="balance-label">AGRI:</span>
+              <span className="balance-amount">
+                {Number(tokenBalance) / 10 ** 18}
+              </span>
+            </div>
+          )}
+          {isConnected && isVerified && (
+            <div className="verification-badge">
+              {isFarmer && <span className="farmer-badge">🌾 Farmer</span>}
+              {isBuyer && <span className="buyer-badge">🛒 Buyer</span>}
+            </div>
+          )}
+        </div>
+
         {session?.user && (
           <Link href="/cart" className="cart-icon-link">
             <div className="cart-icon-container">

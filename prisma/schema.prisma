@@ -33,20 +33,35 @@ model Cart {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String    @unique
-  emailVerified  DateTime?
-  password       String
-  image          String?
-  createdAt      DateTime  @default(now())
-  role           UserRole
-  shop           Shop?     @relation("UserShop")
-  supplier       Supplier? @relation("SupplierOwner")
-  orders         Order[]   @relation("UserOrders")
-  carts          Cart[]    // Reverse relation field to Cart
-  cartItems      CartItem[] @relation("UserCartItems")
-  updatedAt      DateTime  @updatedAt
+  id                String          @id @default(cuid())
+  name              String?
+  email             String          @unique
+  emailVerified     DateTime?
+  password          String
+  image             String?
+  createdAt         DateTime        @default(now())
+  role              UserRole
+  shop              Shop?           @relation("UserShop")
+  supplier          Supplier?       @relation("SupplierOwner")
+  orders            Order[]         @relation("UserOrders")
+  carts             Cart[]          // Reverse relation field to Cart
+  cartItems         CartItem[]      @relation("UserCartItems")
+  updatedAt         DateTime        @updatedAt
+
+  // Web3 and Blockchain fields
+  walletAddress     String?         @unique
+  isWeb3Verified    Boolean         @default(false)
+  kycStatus         KYCStatus       @default(PENDING)
+  kycDocument       KYCDocument?    @relation("UserKYC")
+  blockchainProfile BlockchainProfile? @relation("UserBlockchain")
+  nftCollections    NFTCollection[] @relation("UserNFTs")
+  tokenBalance      String          @default("0") // Store as string for precision
+  rewardPoints      Int             @default(0)
+
+  // Verification timestamps
+  farmerVerifiedAt  DateTime?
+  buyerVerifiedAt   DateTime?
+  web3VerifiedAt    DateTime?
 }
 
 enum UserRole {
@@ -213,4 +228,294 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Web3 and Blockchain Models
+model KYCDocument {
+  id                String      @id @default(cuid())
+  userId            String      @unique
+  user              User        @relation("UserKYC", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Personal Information
+  fullName          String
+  dateOfBirth       DateTime
+  nationality       String
+  governmentId      String      // ID number
+  governmentIdType  String      // passport, driver_license, national_id
+
+  // Address Information
+  streetAddress     String
+  city              String
+  state             String
+  postalCode        String
+  country           String
+
+  // Business Information (for farmers/suppliers)
+  businessName      String?
+  businessType      String?     // individual, partnership, corporation
+  businessRegistration String? // Registration number
+  taxId             String?
+
+  // Document uploads
+  idDocumentUrl     String      // Government ID image
+  proofOfAddressUrl String      // Utility bill, etc.
+  businessDocumentUrl String?   // Business registration
+  farmCertificateUrl String?    // Farm certification
+
+  // Verification
+  status            KYCStatus   @default(PENDING)
+  verifiedBy        String?     // Admin who verified
+  verifiedAt        DateTime?
+  rejectionReason   String?
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+enum KYCStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+model BlockchainProfile {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  user                  User      @relation("UserBlockchain", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Blockchain addresses
+  primaryWalletAddress  String    @unique
+  secondaryWallets      String?   @db.Text // JSON array of additional wallet addresses
+
+  // Verification on blockchain
+  isFarmerVerified      Boolean   @default(false)
+  isBuyerVerified       Boolean   @default(false)
+
+  // Contract interactions
+  tokenBalance          String    @default("0")
+  totalRewardsEarned    String    @default("0")
+  totalTokensSpent      String    @default("0")
+
+  // NFT ownership
+  ownedNFTs             String?   @db.Text // JSON array of NFT token IDs
+
+  // Reputation on blockchain
+  reputationScore       Int       @default(0)
+  totalTransactions     Int       @default(0)
+  successfulDeliveries  Int       @default(0)
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model NFTCollection {
+  id                String          @id @default(cuid())
+  ownerId           String
+  owner             User            @relation("UserNFTs", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // NFT Details
+  tokenId           String          @unique // Blockchain token ID
+  contractAddress   String          // NFT contract address
+  chainId           Int             // Blockchain network ID
+
+  // Product Information
+  productName       String
+  productType       String
+  farmLocation      String
+  batchNumber       String
+  harvestDate       DateTime
+  expiryDate        DateTime?
+
+  // Certification
+  certificationLevel String         // Organic, Bio, Traditional
+  certifications    String          @db.Text // JSON array of certifications
+
+  // Quality metrics
+  nutritionalScore  Int?
+  freshnessScore    Int?
+  sustainabilityScore Int?
+  qualityGrade      String?         // A+, A, B+, B, C
+
+  // Metadata
+  metadataUri       String
+  imageUrl          String
+  description       String?         @db.Text
+
+  // Marketplace
+  isListed          Boolean         @default(false)
+  currentPrice      String?         // Current listing price
+  priceHistory      String?         @db.Text // JSON array of price history
+
+  // Traceability
+  traceabilityData  String?         @db.Text // JSON with supply chain data
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  listings          BlockchainListing[]
+  transactions      NFTTransaction[]
+}
+
+model BlockchainListing {
+  id                String        @id @default(cuid())
+  listingId         String        @unique // Blockchain listing ID
+
+  // NFT Details
+  nftCollectionId   String
+  nftCollection     NFTCollection @relation(fields: [nftCollectionId], references: [id], onDelete: Cascade)
+
+  // Seller
+  sellerId          String
+  sellerAddress     String        // Blockchain address
+
+  // Listing Details
+  quantity          Int
+  pricePerUnit      String        // AGRI token price
+  pricePerUnitETH   String        // ETH price
+  acceptsETH        Boolean       @default(true)
+  acceptsAGRI       Boolean       @default(true)
+
+  // Status
+  isActive          Boolean       @default(true)
+  totalSold         Int           @default(0)
+  remainingQuantity Int
+
+  // Blockchain
+  contractAddress   String
+  chainId           Int
+  transactionHash   String?
+
+  // Timing
+  createdAt         DateTime      @default(now())
+  expiresAt         DateTime
+  updatedAt         DateTime      @updatedAt
+
+  // Relations
+  orders            BlockchainOrder[]
+}
+
+model BlockchainOrder {
+  id                String            @id @default(cuid())
+  orderId           String            @unique // Blockchain order ID
+
+  // Listing
+  listingId         String
+  listing           BlockchainListing @relation(fields: [listingId], references: [id])
+
+  // Parties
+  buyerId           String
+  buyerAddress      String            // Blockchain address
+  sellerId          String
+  sellerAddress     String            // Blockchain address
+
+  // Order Details
+  quantity          Int
+  totalPrice        String
+  paymentToken      String            // Contract address (0x0 for ETH)
+  paymentMethod     PaymentMethod
+
+  // Status
+  status            BlockchainOrderStatus @default(PENDING)
+
+  // Blockchain
+  contractAddress   String
+  chainId           Int
+  createTxHash      String?
+  confirmTxHash     String?
+  deliveryTxHash    String?
+
+  // Shipping
+  shippingAddress   String            @db.Text
+  trackingNumber    String?
+  estimatedDelivery DateTime?
+
+  // Timing
+  createdAt         DateTime          @default(now())
+  confirmedAt       DateTime?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+  updatedAt         DateTime          @updatedAt
+}
+
+enum PaymentMethod {
+  ETH
+  AGRI_TOKEN
+  MIXED
+}
+
+enum BlockchainOrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  DISPUTED
+  REFUNDED
+}
+
+model NFTTransaction {
+  id                String        @id @default(cuid())
+
+  // NFT
+  nftCollectionId   String
+  nftCollection     NFTCollection @relation(fields: [nftCollectionId], references: [id])
+
+  // Transaction Details
+  transactionHash   String        @unique
+  blockNumber       String
+  chainId           Int
+
+  // Parties
+  fromAddress       String
+  toAddress         String
+
+  // Transaction Type
+  transactionType   TransactionType
+  quantity          Int
+  value             String?       // Transaction value if applicable
+
+  // Gas and fees
+  gasUsed           String?
+  gasPrice          String?
+  transactionFee    String?
+
+  // Timing
+  blockTimestamp    DateTime
+  createdAt         DateTime      @default(now())
+}
+
+enum TransactionType {
+  MINT
+  TRANSFER
+  SALE
+  BURN
+  APPROVAL
+}
+
+model SystemConfig {
+  id                String   @id @default(cuid())
+  key               String   @unique
+  value             String   @db.Text
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// For storing contract addresses and configurations
+model ContractConfig {
+  id                String   @id @default(cuid())
+  chainId           Int
+  contractName      String   // AgriChainToken, AgriChainNFT, AgriChainMarketplace
+  contractAddress   String
+  deployedAt        DateTime
+  isActive          Boolean  @default(true)
+  version           String   @default("1.0.0")
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([chainId, contractName])
 }
