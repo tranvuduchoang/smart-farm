@@ -24,6 +24,11 @@ export default function HeaderComponent() {
   const { data: session } = useSession();
   const [cartCount, setCartCount] = useState(0);
 
+  // Web3 hooks
+  const { address, isConnected } = useAccount();
+  const { data: tokenBalance } = useTokenBalance();
+  const { isFarmer, isBuyer, isVerified } = useVerificationStatus();
+
   const handleLanguageSwitch = () => {
     i18n.changeLanguage(nextLang);
     // Cập nhật cookie ngôn ngữ cho server
