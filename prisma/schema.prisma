@@ -33,20 +33,35 @@ model Cart {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String    @unique
-  emailVerified  DateTime?
-  password       String
-  image          String?
-  createdAt      DateTime  @default(now())
-  role           UserRole
-  shop           Shop?     @relation("UserShop")
-  supplier       Supplier? @relation("SupplierOwner")
-  orders         Order[]   @relation("UserOrders")
-  carts          Cart[]    // Reverse relation field to Cart
-  cartItems      CartItem[] @relation("UserCartItems")
-  updatedAt      DateTime  @updatedAt
+  id                String          @id @default(cuid())
+  name              String?
+  email             String          @unique
+  emailVerified     DateTime?
+  password          String
+  image             String?
+  createdAt         DateTime        @default(now())
+  role              UserRole
+  shop              Shop?           @relation("UserShop")
+  supplier          Supplier?       @relation("SupplierOwner")
+  orders            Order[]         @relation("UserOrders")
+  carts             Cart[]          // Reverse relation field to Cart
+  cartItems         CartItem[]      @relation("UserCartItems")
+  updatedAt         DateTime        @updatedAt
+
+  // Web3 and Blockchain fields
+  walletAddress     String?         @unique
+  isWeb3Verified    Boolean         @default(false)
+  kycStatus         KYCStatus       @default(PENDING)
+  kycDocument       KYCDocument?    @relation("UserKYC")
+  blockchainProfile BlockchainProfile? @relation("UserBlockchain")
+  nftCollections    NFTCollection[] @relation("UserNFTs")
+  tokenBalance      String          @default("0") // Store as string for precision
+  rewardPoints      Int             @default(0)
+
+  // Verification timestamps
+  farmerVerifiedAt  DateTime?
+  buyerVerifiedAt   DateTime?
+  web3VerifiedAt    DateTime?
 }
 
 enum UserRole {
