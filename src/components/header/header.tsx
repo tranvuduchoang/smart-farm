@@ -136,6 +136,25 @@ export default function HeaderComponent() {
         <a href="/about">{t("about")}</a>
       </nav>
       <div className="actions">
+        {/* Web3 Wallet Connection */}
+        <div className="wallet-section">
+          <WalletConnect />
+          {isConnected && tokenBalance && (
+            <div className="token-balance">
+              <span className="balance-label">AGRI:</span>
+              <span className="balance-amount">
+                {Number(tokenBalance) / 10 ** 18}
+              </span>
+            </div>
+          )}
+          {isConnected && isVerified && (
+            <div className="verification-badge">
+              {isFarmer && <span className="farmer-badge">🌾 Farmer</span>}
+              {isBuyer && <span className="buyer-badge">🛒 Buyer</span>}
+            </div>
+          )}
+        </div>
+
         {session?.user && (
           <Link href="/cart" className="cart-icon-link">
             <div className="cart-icon-container">
