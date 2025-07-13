@@ -11,6 +11,9 @@ import { Dropdown } from "antd";
 import { RxAvatar } from "react-icons/rx";
 import { FaShoppingCart } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { WalletConnect } from "@/components/wallet/WalletConnect";
+import { useAccount } from "wagmi";
+import { useTokenBalance, useVerificationStatus } from "@/hooks/useAgriChain";
 
 import i18n from "@/i18n";
 
@@ -89,11 +92,15 @@ export default function HeaderComponent() {
     //   : []),
     ...(session?.user?.role === "NORMAL_USER"
       ? [
-        {
-          key: "3",
-          label: <Link href="/suppliers/create">{t("create Your Own supplier")}</Link>, // "Create your own shop" for normal users
-        },
-      ]
+          {
+            key: "3",
+            label: (
+              <Link href="/suppliers/create">
+                {t("create Your Own supplier")}
+              </Link>
+            ), // "Create your own shop" for normal users
+          },
+        ]
       : []),
     ...(session?.user?.role === "SELLER"
       ? [
